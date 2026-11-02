@@ -1,0 +1,161 @@
+<template>
+  <div class="aster-phone">
+    <!-- Header -->
+    <div class="aster-header">
+      <div class="aster-avatar">Aster</div>
+      <div class="aster-head-text">
+        <div class="aster-title">{headerTitle}</div>
+        <div class="aster-sub">{headerSub}</div>
+      </div>
+      <div class="aster-head-actions">
+        <svg viewBox="0 0 24 24"><path d="M15.9 14.3H15l-.3-.3c1-1.1 1.6-2.7 1.6-4.3 0-3.7-3-6.7-6.7-6.7S3 6 3 9.7s3 6.7 6.7 6.7c1.6 0 3.2-.6 4.3-1.6l.3.3v.8l5.1 5.1 1.5-1.5-5-5.2zm-6.2 0c-2.6 0-4.6-2.1-4.6-4.6s2.1-4.6 4.6-4.6 4.6 2.1 4.6 4.6-2 4.6-4.6 4.6z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"/></svg>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="aster-messages" onlinkclick={handleLinkClick}>
+      <template for:each={messages} for:item="msg">
+        <div key={msg.id} class="aster-row">
+          <!-- System note -->
+          <template if:true={msg.isSystem}>
+            <div class="aster-system"><c-de_aster-text html-value={msg.html}></c-de_aster-text></div>
+          </template>
+
+          <!-- Plain text bubble -->
+          <template if:true={msg.isText}>
+            <div class={msg.bubbleClass}>
+              <span class="aster-bubble-text"><c-de_aster-text html-value={msg.html}></c-de_aster-text></span>
+              <span class="aster-time">{msg.time}</span>
+            </div>
+          </template>
+
+          <!-- Image bubble (photo upload) — shows the actual picked image -->
+          <template if:true={msg.isImage}>
+            <div class={msg.bubbleClass}>
+              <img class="aster-img" src={msg.imageUrl} alt="uploaded photo" />
+              <template if:true={msg.html}>
+                <div class="aster-img-cap"><c-de_aster-text html-value={msg.html}></c-de_aster-text></div>
+              </template>
+              <span class="aster-time">{msg.time}</span>
+            </div>
+          </template>
+
+          <!-- Interactive card -->
+          <template if:true={msg.isCard}>
+            <!-- Carousel: lead-in bubble + scrolling product cards -->
+            <template if:true={msg.card.isCarousel}>
+              <div class="aster-cwrap">
+                <template if:true={msg.card.hasBody}>
+                  <div class="aster-bubble aster-in aster-lead">
+                    <span class="aster-bubble-text"><c-de_aster-text html-value={msg.card.bodyHtml}></c-de_aster-text></span>
+                    <span class="aster-time">{msg.card.time}</span>
+                  </div>
+                </template>
+                <div class="aster-carousel">
+                  <template for:each={msg.card.cards} for:item="c">
+                    <div key={c.id} class="aster-ccard">
+                      <template if:true={c.image}>
+                        <img class="aster-ccard-img" src={c.image} alt="product" />
+                      </template>
+                      <div class="aster-ccard-body">
+                        <div class="aster-ccard-title"><c-de_aster-text html-value={c.titleHtml}></c-de_aster-text></div>
+                        <template if:true={c.hasDesc}>
+                          <div class="aster-ccard-desc"><c-de_aster-text html-value={c.descHtml}></c-de_aster-text></div>
+                        </template>
+                      </div>
+                      <template for:each={c.buttons} for:item="b">
+                        <button key={b.id} class="aster-ccard-btn" data-reply={b.payload} data-url={b.url} onclick={handleButton}>
+                          <template if:true={b.isCta}>🔗 </template>{b.label}
+                        </button>
+                      </template>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+
+            <!-- Button message: media/text bubble + reply pills below -->
+            <template if:true={msg.card.isButton}>
+              <div class="aster-cwrap">
+                <div class="aster-bcard">
+                  <template if:true={msg.card.image}>
+                    <img class="aster-bcard-img" src={msg.card.image} alt="product" />
+                  </template>
+                  <div class="aster-bcard-body">
+                    <span class="aster-bubble-text"><c-de_aster-text html-value={msg.card.bodyHtml}></c-de_aster-text></span>
+                    <span class="aster-time">{msg.card.time}</span>
+                  </div>
+                </div>
+                <div class="aster-pills">
+                  <template for:each={msg.card.buttons} for:item="b">
+                    <button key={b.id} class="aster-pill" data-reply={b.payload} data-url={b.url} onclick={handleButton}>
+                      <template if:true={b.isCta}>🔗 </template>{b.label}
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </template>
+
+            <!-- List message: text bubble + expandable menu -->
+            <template if:true={msg.card.isList}>
+              <div class="aster-cwrap">
+                <div class="aster-bubble aster-in aster-lead">
+                  <template if:true={msg.card.headerText}>
+                    <div class="aster-list-header">{msg.card.headerText}</div>
+                  </template>
+                  <span class="aster-bubble-text"><c-de_aster-text html-value={msg.card.bodyHtml}></c-de_aster-text></span>
+                  <template if:true={msg.card.footerText}>
+                    <div class="aster-list-footer">{msg.card.footerText}</div>
+                  </template>
+                  <span class="aster-time">{msg.card.time}</span>
+                </div>
+                <template if:false={msg.card.open}>
+                  <button class="aster-list-btn" data-msgid={msg.id} onclick={handleListToggle}>&#9776; {msg.card.listButton}</button>
+                </template>
+                <template if:true={msg.card.open}>
+                  <div class="aster-list-menu">
+                    <template for:each={msg.card.sections} for:item="sec">
+                      <div key={sec.id}>
+                        <div class="aster-list-section">{sec.title}</div>
+                        <template for:each={sec.rows} for:item="r">
+                          <button key={r.id} class="aster-row-item" data-payload={r.payload} onclick={handleRow}>
+                            <span class="aster-row-title">{r.title}</span>
+                            <span class="aster-row-desc">{r.description}</span>
+                          </button>
+                        </template>
+                      </div>
+                    </template>
+                  </div>
+                </template>
+              </div>
+            </template>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    <!-- Composer -->
+    <div class="aster-composer">
+      <button class="aster-attach" title="Send a photo" onclick={handlePhotoClick}>&#128206;</button>
+      <input
+        class="aster-file"
+        type="file"
+        accept="image/*"
+        onchange={handleFilePicked}
+      />
+      <div class="aster-input-wrap">
+        <span class="aster-emoji">&#9786;</span>
+        <input
+          class="aster-input"
+          type="text"
+          placeholder="Type a message"
+          value={draft}
+          oninput={handleInput}
+          onkeyup={handleKeyUp}
+        />
+      </div>
+      <button class="aster-send" title="Send" onclick={handleSendClick}>&#10148;</button>
+    </div>
+  </div>
+</template>

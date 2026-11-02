@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root {
+  --wa-green: #075e54;
+  --wa-light-green: #25d366;
+  --wa-chat-bg: #efeae2;
+  --wa-header-bg: #075e54;
+  --wa-incoming: #ffffff;
+  --wa-outgoing: #d9fdd3;
+  --wa-time: #667781;
+  --wa-dark-bg: #111b21;
+  --wa-dark-chat-bg: #0b141a;
+  --wa-dark-incoming: #202c33;
+  --wa-dark-outgoing: #005c4b;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

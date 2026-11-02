@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RemoteSiteSetting xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>MIAW (Messaging for In-App &amp; Web) scrt2 endpoint — allows de_AsterAgentController to open/send/poll the live human-handoff conversation (Aster_WA_Custom_Client deployment).</description>
+    <disableProtocolSecurity>false</disableProtocolSecurity>
+    <isActive>true</isActive>
+    <url>https://REPLACE_ME.my.salesforce-scrt.com</url>
+</RemoteSiteSetting>

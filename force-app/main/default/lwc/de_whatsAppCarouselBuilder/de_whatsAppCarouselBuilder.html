@@ -1,0 +1,319 @@
+<template>
+    <lightning-card title="WhatsApp Carousel Template Builder" icon-name="custom:custom18">
+        <div class="slds-p-around_medium">
+            <lightning-layout>
+                <!-- LEFT SIDE: Form -->
+                <lightning-layout-item size="12" medium-device-size="7" padding="around-small">
+                    <!-- Template Settings -->
+                    <div class="slds-box slds-m-bottom_medium slds-theme_shade">
+                        <h2 class="slds-text-heading_small slds-m-bottom_small">Template Settings</h2>
+                        <lightning-layout multiple-rows>
+                            <lightning-layout-item size="12" medium-device-size="4" padding="around-small">
+                                <lightning-input
+                                    label="Template Name"
+                                    value={templateName}
+                                    onchange={handleTemplateNameChange}
+                                    placeholder="e.g. summer_sale_carousel"
+                                    field-level-help="Lowercase, alphanumeric and underscores only."
+                                    required>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="4" padding="around-small">
+                                <lightning-combobox
+                                    label="Language"
+                                    value={language}
+                                    options={languageOptions}
+                                    onchange={handleLanguageChange}>
+                                </lightning-combobox>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="4" padding="around-small">
+                                <lightning-combobox
+                                    label="Category"
+                                    value={category}
+                                    options={categoryOptions}
+                                    onchange={handleCategoryChange}>
+                                </lightning-combobox>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" padding="around-small">
+                                <lightning-input
+                                    label="Header Text"
+                                    value={headerText}
+                                    onchange={handleHeaderTextChange}
+                                    placeholder="e.g. Summer Sale 2025! or {{header_var}}"
+                                    field-level-help="Rendered as bold at the top of the message. Supports variables."
+                                    max-length="60">
+                                </lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" padding="around-small">
+                                <lightning-textarea
+                                    label="Body Text"
+                                    value={bodyText}
+                                    onchange={handleBodyTextChange}
+                                    placeholder="Hi {{name}}, check out our latest offers!"
+                                    field-level-help="Main message text. Use {{name}}, {{1}} etc. for personalization."
+                                    max-length="1024">
+                                </lightning-textarea>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" padding="around-small">
+                                <lightning-input
+                                    label="Footer Text"
+                                    value={footerText}
+                                    onchange={handleFooterTextChange}
+                                    placeholder="e.g. Reply STOP to unsubscribe"
+                                    field-level-help="Small grey text at the bottom. No variables allowed. Max 60 chars."
+                                    max-length="60">
+                                </lightning-input>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+
+                    <!-- Cards Section -->
+                    <div class="slds-box slds-m-bottom_medium">
+                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                            <h2 class="slds-text-heading_small">Carousel Cards ({cardCount}/10)</h2>
+                            <lightning-button
+                                label="Add Card"
+                                icon-name="utility:add"
+                                variant="brand"
+                                onclick={handleAddCard}
+                                disabled={addCardDisabled}>
+                            </lightning-button>
+                        </div>
+
+                        <template if:true={hasCards}>
+                            <div class="cards-container">
+                                <template for:each={cards} for:item="card">
+                                    <div key={card.id} class="slds-box slds-m-bottom_small card-item">
+                                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                            <span class="slds-badge slds-badge_inverse">Card {card.index}</span>
+                                            <lightning-button-icon
+                                                icon-name="utility:delete"
+                                                variant="bare"
+                                                alternative-text="Remove card"
+                                                onclick={handleRemoveCard}
+                                                data-card-id={card.id}
+                                                disabled={removeCardDisabled}>
+                                            </lightning-button-icon>
+                                        </div>
+
+                                        <lightning-layout multiple-rows>
+                                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                                <div class="image-upload-area">
+                                                    <p class="slds-text-body_small slds-m-bottom_xx-small"><strong>Card Image</strong> (required)</p>
+                                                    <template if:false={card.hasImage}>
+                                                        <lightning-file-upload
+                                                            label=""
+                                                            name={card.id}
+                                                            record-id={recordId}
+                                                            accept={acceptedFormats}
+                                                            onuploadfinished={handleUploadFinished}
+                                                            data-card-id={card.id}>
+                                                        </lightning-file-upload>
+                                                    </template>
+                                                    <template if:true={card.hasImage}>
+                                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                                            <lightning-icon icon-name="utility:check" variant="success" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                                            <span class="slds-text-body_small slds-m-right_small">{card.fileName}</span>
+                                                            <lightning-button-icon
+                                                                icon-name="utility:close"
+                                                                variant="bare"
+                                                                size="small"
+                                                                alternative-text="Remove image"
+                                                                onclick={handleRemoveImage}
+                                                                data-card-id={card.id}>
+                                                            </lightning-button-icon>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                                <lightning-textarea
+                                                    label="Card Body Text"
+                                                    value={card.bodyText}
+                                                    onchange={handleCardBodyChange}
+                                                    data-card-id={card.id}
+                                                    placeholder="e.g. {{1}} - Now at {{2}}% off!"
+                                                    field-level-help="Use {{1}}, {{2}} etc. for dynamic values."
+                                                    max-length="160"
+                                                    required>
+                                                </lightning-textarea>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="12" padding="around-small">
+                                                <div class="slds-grid slds-grid_align-spread slds-m-bottom_xx-small">
+                                                    <p class="slds-text-body_small"><strong>Buttons</strong> (max 2)</p>
+                                                    <template if:true={card.canAddButton}>
+                                                        <lightning-button
+                                                            label="Add Button"
+                                                            icon-name="utility:add"
+                                                            variant="neutral"
+                                                            size="small"
+                                                            onclick={handleAddButton}
+                                                            data-card-id={card.id}>
+                                                        </lightning-button>
+                                                    </template>
+                                                </div>
+                                                <template if:true={card.hasButtons}>
+                                                    <template for:each={card.buttons} for:item="btn">
+                                                        <div key={btn.id} class="slds-grid slds-grid_vertical-align-end slds-m-bottom_xx-small button-row">
+                                                            <div class="slds-col slds-size_3-of-12 slds-p-right_xx-small">
+                                                                <lightning-combobox
+                                                                    label="Type"
+                                                                    value={btn.type}
+                                                                    options={buttonTypeOptions}
+                                                                    onchange={handleButtonTypeChange}
+                                                                    data-card-id={card.id}
+                                                                    data-btn-id={btn.id}
+                                                                    variant="label-hidden">
+                                                                </lightning-combobox>
+                                                            </div>
+                                                            <div class="slds-col slds-size_4-of-12 slds-p-right_xx-small">
+                                                                <lightning-input
+                                                                    label="Label"
+                                                                    value={btn.text}
+                                                                    onchange={handleButtonTextChange}
+                                                                    data-card-id={card.id}
+                                                                    data-btn-id={btn.id}
+                                                                    placeholder="Button text"
+                                                                    variant="label-hidden">
+                                                                </lightning-input>
+                                                            </div>
+                                                            <div class="slds-col slds-size_4-of-12 slds-p-right_xx-small">
+                                                                <template if:true={btn.isUrl}>
+                                                                    <lightning-input
+                                                                        label="URL"
+                                                                        value={btn.url}
+                                                                        onchange={handleButtonUrlChange}
+                                                                        data-card-id={card.id}
+                                                                        data-btn-id={btn.id}
+                                                                        placeholder="https://..."
+                                                                        variant="label-hidden">
+                                                                    </lightning-input>
+                                                                </template>
+                                                            </div>
+                                                            <div class="slds-col slds-size_1-of-12">
+                                                                <lightning-button-icon
+                                                                    icon-name="utility:delete"
+                                                                    variant="bare"
+                                                                    alternative-text="Remove button"
+                                                                    onclick={handleRemoveButton}
+                                                                    data-card-id={card.id}
+                                                                    data-btn-id={btn.id}>
+                                                                </lightning-button-icon>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </template>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:false={hasCards}>
+                            <div class="slds-illustration slds-illustration_small slds-p-around_medium">
+                                <p class="slds-text-body_regular slds-text-color_weak slds-text-align_center">
+                                    Click "Add Card" to start building your carousel. Minimum 2 cards required.
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                        <lightning-button
+                            label="Submit Template to Meta"
+                            variant="brand"
+                            icon-name="utility:send"
+                            onclick={handleSubmit}
+                            disabled={submitDisabled}
+                            class="submit-btn">
+                        </lightning-button>
+                    </div>
+
+                    <!-- Loading Spinner -->
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Submitting template..." size="medium"></lightning-spinner>
+                    </template>
+                </lightning-layout-item>
+
+                <!-- RIGHT SIDE: WhatsApp Preview -->
+                <lightning-layout-item size="12" medium-device-size="5" padding="around-small">
+                    <div class="preview-container">
+                        <div class="preview-header">
+                            <div class="preview-header-bar">
+                                <span class="preview-contact-name">WhatsApp Preview</span>
+                            </div>
+                        </div>
+                        <div class="preview-chat-area">
+                            <!-- Message Bubble -->
+                            <div class="preview-bubble">
+                                <template if:true={headerText}>
+                                    <p class="preview-header-text">{headerText}</p>
+                                </template>
+                                <template if:true={bodyText}>
+                                    <p class="preview-body-text">{bodyText}</p>
+                                </template>
+                                <template if:false={bodyText}>
+                                    <p class="preview-body-placeholder">Your message text will appear here...</p>
+                                </template>
+                                <template if:true={footerText}>
+                                    <p class="preview-footer-text">{footerText}</p>
+                                </template>
+                                <span class="preview-time">10:30 AM</span>
+                            </div>
+
+                            <!-- Carousel Cards Preview -->
+                            <template if:true={hasCards}>
+                                <div class="preview-carousel">
+                                    <template for:each={cards} for:item="card">
+                                        <div key={card.id} class="preview-card">
+                                            <div class="preview-card-image">
+                                                <template if:true={card.hasImage}>
+                                                    <div class="preview-card-image-uploaded">
+                                                        <lightning-icon icon-name="utility:image" size="small"></lightning-icon>
+                                                        <span>{card.fileName}</span>
+                                                    </div>
+                                                </template>
+                                                <template if:false={card.hasImage}>
+                                                    <div class="preview-card-image-placeholder">
+                                                        <lightning-icon icon-name="utility:image" size="medium"></lightning-icon>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                            <div class="preview-card-body">
+                                                <template if:true={card.bodyText}>
+                                                    <p class="preview-card-text">{card.bodyText}</p>
+                                                </template>
+                                                <template if:false={card.bodyText}>
+                                                    <p class="preview-card-text-placeholder">Card text...</p>
+                                                </template>
+                                            </div>
+                                            <template if:true={card.hasButtons}>
+                                                <div class="preview-card-buttons">
+                                                    <template for:each={card.buttons} for:item="btn">
+                                                        <div key={btn.id} class="preview-card-button">
+                                                            <template if:true={btn.isUrl}>
+                                                                <lightning-icon icon-name="utility:new_window" size="xx-small" class="preview-btn-icon"></lightning-icon>
+                                                            </template>
+                                                            <template if:false={btn.isUrl}>
+                                                                <lightning-icon icon-name="utility:reply" size="xx-small" class="preview-btn-icon"></lightning-icon>
+                                                            </template>
+                                                            <span>{btn.text}</span>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>

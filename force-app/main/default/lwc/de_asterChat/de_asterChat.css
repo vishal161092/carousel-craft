@@ -1,0 +1,420 @@
+:host {
+  display: block;
+  --aster-green: #075e54;
+  --aster-blue: #027eb5;
+  --aster-out: #d9fdd3;
+  --aster-bg: #efeae2;
+  --aster-footer: #f0f2f5;
+  --aster-time: #667781;
+}
+
+.aster-phone {
+  /* Pin to the visible viewport so the WhatsApp app fills the screen, breaking out
+     of the LWR padded/boxed content region (fixed positioning is relative to the
+     viewport, not the community content column). 100dvh keeps the composer above
+     mobile browser chrome. Centered phone-width column on wide screens. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--aster-bg);
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.12);
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Header */
+.aster-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--aster-green);
+  color: #fff;
+}
+.aster-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #0b0b0b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.aster-head-text {
+  flex: 1;
+  min-width: 0;
+}
+.aster-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+.aster-sub {
+  font-size: 12px;
+  color: #cfe9e3;
+}
+.aster-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 0 0 auto;
+}
+.aster-head-actions svg {
+  width: 21px;
+  height: 21px;
+  fill: #fff;
+  opacity: 0.95;
+}
+
+/* Messages */
+.aster-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.aster-row {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bubbles */
+.aster-bubble {
+  max-width: 82%;
+  padding: 6px 9px 6px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: #111b21;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+  word-wrap: break-word;
+}
+.aster-bubble::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.aster-in {
+  align-self: flex-start;
+  background: #fff;
+  border-top-left-radius: 0;
+}
+.aster-out {
+  align-self: flex-end;
+  background: var(--aster-out);
+  border-top-right-radius: 0;
+}
+.aster-bubble-text {
+  white-space: pre-wrap;
+}
+.aster-time {
+  float: right;
+  font-size: 11px;
+  color: var(--aster-time);
+  margin: 6px 0 -2px 10px;
+  line-height: 1;
+}
+
+/* Links */
+.aster-link {
+  color: var(--aster-blue);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+/* System chip */
+.aster-system {
+  align-self: center;
+  background: #ffeecd;
+  color: #7a5b1e;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin: 6px auto;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 85%;
+}
+
+/* Interactive-card wrapper (carousel / button / list) */
+.aster-cwrap {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  max-width: 92%;
+}
+.aster-lead {
+  max-width: 100%;
+}
+
+/* Carousel */
+.aster-carousel {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 2px 6px;
+  max-width: 100%;
+  scrollbar-width: none;
+}
+.aster-carousel::-webkit-scrollbar {
+  display: none;
+}
+.aster-ccard {
+  flex: 0 0 240px;
+  width: 240px;
+  background: #fff;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.aster-ccard-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+.aster-ccard-body {
+  padding: 10px 12px;
+}
+.aster-ccard-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111b21;
+  line-height: 1.35;
+}
+.aster-ccard-desc {
+  font-size: 12.5px;
+  color: #667781;
+  margin-top: 3px;
+  line-height: 1.35;
+}
+.aster-ccard-btn {
+  display: block;
+  width: 100%;
+  border: none;
+  border-top: 1px solid #eceff1;
+  background: #fff;
+  color: var(--aster-blue);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+.aster-ccard-btn:hover {
+  background: #f6fafb;
+}
+
+/* Button message — media/text card + reply pills below */
+.aster-bcard {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+  max-width: 320px;
+}
+.aster-bcard-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+.aster-bcard-body {
+  padding: 8px 12px 6px;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: #111b21;
+}
+.aster-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.aster-pill {
+  border: 1px solid var(--aster-blue);
+  color: var(--aster-blue);
+  background: #fff;
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.aster-pill:hover {
+  background: rgba(2, 126, 181, 0.08);
+}
+
+/* List message */
+.aster-list-header {
+  font-weight: 700;
+  font-size: 14px;
+  color: #111b21;
+  margin-bottom: 2px;
+}
+.aster-list-footer {
+  font-size: 12px;
+  color: var(--aster-time);
+  margin-top: 3px;
+}
+.aster-list-btn {
+  border: 1px solid var(--aster-blue);
+  color: var(--aster-blue);
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.aster-list-btn:hover {
+  background: rgba(2, 126, 181, 0.05);
+}
+.aster-list-menu {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+.aster-list-section {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--aster-time);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.aster-row-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  background: #fff;
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+}
+.aster-row-item:hover {
+  background: #f6fafb;
+}
+.aster-row-title {
+  font-weight: 500;
+  font-size: 14px;
+  color: #111b21;
+}
+.aster-row-desc {
+  font-size: 12px;
+  color: var(--aster-time);
+  margin-top: 2px;
+}
+
+/* Image bubble (photo upload) — the actual picked image */
+.aster-img {
+  display: block;
+  max-width: 230px;
+  max-height: 280px;
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.aster-img-cap {
+  font-size: 12px;
+  color: var(--aster-time);
+  margin-top: 4px;
+}
+
+/* Handoff "chat with a specialist" button */
+.aster-handoff-btn {
+  align-self: center;
+  margin: 2px auto 8px;
+  border: none;
+  background: var(--aster-green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+.aster-handoff-btn:hover {
+  background: #064a42;
+}
+
+/* Hidden native file input (paperclip triggers it) */
+.aster-file {
+  display: none;
+}
+
+/* Composer */
+.aster-composer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--aster-footer);
+}
+.aster-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: 22px;
+  padding: 0 14px;
+}
+.aster-emoji {
+  font-size: 18px;
+  color: #8696a0;
+  flex: 0 0 auto;
+  line-height: 1;
+}
+.aster-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 11px 2px;
+  font-size: 14px;
+  outline: none;
+  color: #111b21;
+}
+.aster-attach {
+  border: none;
+  background: transparent;
+  color: #54656f;
+  font-size: 20px;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 4px;
+  transform: rotate(-45deg);
+}
+.aster-send {
+  border: none;
+  background: transparent;
+  color: #54656f;
+  font-size: 22px;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 4px 6px;
+}
